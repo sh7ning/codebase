@@ -11,7 +11,6 @@
 
 ```
 ./auto-build-dev
-
 ```
 
 ## Production
