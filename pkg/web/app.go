@@ -39,9 +39,9 @@ func getEngine() *gin.Engine {
 	engine.NoRoute(errors.NoFound())
 
 	//handle static file
-	//engine.Static("/static", "public/static")
-	//engine.StaticFile("/favicon.ico", "public/favicon.ico")
-	//engine.StaticFile("/", "public/index.html")
+	engine.Static("/static", "public/static")
+	engine.StaticFile("/favicon.ico", "public/favicon.ico")
+	engine.StaticFile("/", "public/index.html")
 
 	routes.Routes(engine)
 
