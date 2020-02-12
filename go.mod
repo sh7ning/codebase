@@ -14,6 +14,7 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/rs/xid v1.2.1
 	github.com/spf13/cobra v0.0.5
+	github.com/spf13/pflag v1.0.3
 	github.com/spf13/viper v1.6.2
 	go.uber.org/zap v1.13.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0

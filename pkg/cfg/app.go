@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -50,7 +51,7 @@ type DB struct {
 	MaxOpenConns    int           `mapstructure:"max_open_conns" validate:"required"`
 }
 
-func LoadConfig(cfgFile string) (string, error) {
+func LoadConfig(cfgFile string, flagSet *pflag.FlagSet) (string, error) {
 	v := viper.New()
 	v.SetConfigFile(cfgFile)
 	v.SetConfigType("yaml")
@@ -58,6 +59,10 @@ func LoadConfig(cfgFile string) (string, error) {
 	if err := v.ReadInConfig(); err != nil {
 		return "", err
 	}
+
+	//if err := v.BindPFlag("app.name", flagSet.Lookup("app_name")); err != nil {
+	//	return "", err
+	//}
 
 	if err := v.Unmarshal(&AppConfig, func(config *mapstructure.DecoderConfig) {
 		config.TagName = "mapstructure"

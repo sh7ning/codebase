@@ -16,10 +16,11 @@ var startCmd = &cobra.Command{
 			panic(err)
 		}
 
-		bootstrap.Run(cfgFile)
+		bootstrap.Run(cfgFile, cmd.Flags())
 	},
 }
 
 func init() {
 	startCmd.Flags().StringP("config", "c", "config.yaml", "app config file")
+	//startCmd.Flags().String("app_name", "", "symbol")
 }

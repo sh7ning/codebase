@@ -11,12 +11,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/spf13/pflag"
 	"go.uber.org/zap"
 )
 
-func Run(cfgFile string) {
+func Run(cfgFile string, flagSet *pflag.FlagSet) {
 	//load cfg
-	configFile, err := cfg.LoadConfig(cfgFile)
+	configFile, err := cfg.LoadConfig(cfgFile, flagSet)
 	if err != nil {
 		panic(err)
 	}
