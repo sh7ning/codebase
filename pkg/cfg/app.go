@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-var AppConfig app
+var AppConfig appConf
 
-type app struct {
+type appConf struct {
 	AppDebug   bool                `mapstructure:"app_debug"`
 	App        App                 `mapstructure:"app" validate:"required,dive"`
 	HttpServer HttpServer          `mapstructure:"http_server" validate:"required"`

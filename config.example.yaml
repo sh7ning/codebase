@@ -1,7 +1,7 @@
 app_debug: true
 
 app:
-  name: jump-market
+  name: gin-app
   log_file: ""
   error_reporting: false
 
