@@ -10,6 +10,7 @@ import (
 	"app/pkg/cfg"
 	"app/pkg/services/dingtalk"
 	"app/pkg/utils/helper"
+	"app/pkg/utils/recovery"
 	"errors"
 	"fmt"
 	"os"
@@ -53,13 +54,20 @@ func New(development bool) {
 		opts = append(opts, zap.Hooks(func(entry zapcore.Entry) error {
 			if zap.WarnLevel.Enabled(entry.Level) {
 				go func() {
+					defer recovery.Recover(func(stack string) {
+						fmt.Println("logger recovery, 钉钉发送消息失败:" + stack)
+					})()
+
 					//!!! 此处会修改 entry.Stack 防止 stacktrace 过长
 					stack := []rune(entry.Stack)
 					if len(stack) > 2048 {
 						entry.Stack = string(stack[:2048])
 					}
-					if err := dingtalk.Instance("").SendTextMessage(helper.ToJsonString(entry), nil, false); err != nil {
-						fmt.Println("钉钉发送消息失败:" + err.Error())
+					ding := dingtalk.Instance("")
+					if ding != nil {
+						if err := ding.SendTextMessage(helper.ToJsonString(entry), nil, false); err != nil {
+							fmt.Println("钉钉发送消息失败:" + err.Error())
+						}
 					}
 				}()
 			}

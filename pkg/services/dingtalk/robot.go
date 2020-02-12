@@ -14,6 +14,9 @@ func Instance(name string) *dingtalk_robot.Robot {
 
 	if _, ok := dingTalkRobots[name]; !ok {
 		if config, ok := cfg.AppConfig.DingTalk[name]; ok {
+			if config.Token == "" {
+				return nil
+			}
 			dingTalkRobots[name] = dingtalk_robot.NewRobot(config.Token, config.Secret)
 		} else {
 			return nil

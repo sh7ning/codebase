@@ -18,7 +18,7 @@
 * Run
 
 ```
-./app -c config.yaml
+./app start -c config.yaml
 ```
 
 ## Todo

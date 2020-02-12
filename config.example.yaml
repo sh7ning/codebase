@@ -1,14 +1,14 @@
-app_debug: false
+app_debug: true
 
 app_name: gin-app
 
 log_file: /tmp/gin-app.log
 
-error_reporting: true
+error_reporting: false
 
 http_server:
   address: 0.0.0.0:8080
-  token: gin-app-token
+  token: ""
 
 db:
   default:
