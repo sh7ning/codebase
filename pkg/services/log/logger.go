@@ -51,7 +51,7 @@ func New(development bool) {
 
 	opts := make([]zap.Option, 0, 1)
 	if cfg.AppConfig.App.ErrorReporting {
-		//增加钉钉消息
+		//warn 级别以上发送钉钉消息
 		opts = append(opts, zap.Hooks(func(entry zapcore.Entry) error {
 			if zap.WarnLevel.Enabled(entry.Level) {
 				go func() {
