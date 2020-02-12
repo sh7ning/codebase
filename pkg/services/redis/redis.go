@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/go-redis/redis"
+	"go.uber.org/zap"
 )
 
 var redisConnections = make(map[string]*redis.Client)
@@ -49,4 +50,14 @@ func Connection(conn string) *redis.Client {
 	}
 
 	return redisConnections[conn]
+}
+
+func Publish(conn string, channel string, message interface{}) error {
+	if err := Connection(conn).Publish(channel, message).Err(); err != nil {
+		log.Error("redis publish error, channel: "+channel, zap.Error(err), zap.Any("message", message))
+		return err
+	}
+
+	log.Debug("redis publish channel:"+channel, zap.Any("message", message))
+	return nil
 }
