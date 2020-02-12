@@ -13,6 +13,7 @@ import (
 	"app/pkg/utils/recovery"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"go.uber.org/zap"
@@ -49,7 +50,7 @@ func New(development bool) {
 	}
 
 	opts := make([]zap.Option, 0, 1)
-	if cfg.AppConfig.ErrorReporting {
+	if cfg.AppConfig.App.ErrorReporting {
 		//增加钉钉消息
 		opts = append(opts, zap.Hooks(func(entry zapcore.Entry) error {
 			if zap.WarnLevel.Enabled(entry.Level) {
@@ -98,16 +99,18 @@ func NewProduction() Config {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 
-	//正式环境切换为文件
 	//https://github.com/natefinch/lumberjack
-	w := &lumberjack.Logger{
-		Filename:   cfg.AppConfig.LogFile,
-		MaxSize:    500, // megabytes
-		MaxBackups: 3,
-		MaxAge:     1,    //days
-		Compress:   true, // disabled by default
+	var w io.Writer
+	w = os.Stdout
+	if cfg.AppConfig.App.LogFile != "" {
+		w = &lumberjack.Logger{
+			Filename:   cfg.AppConfig.App.LogFile,
+			MaxSize:    500, // megabytes
+			MaxBackups: 3,
+			MaxAge:     1,    //days
+			Compress:   true, // disabled by default
+		}
 	}
-	//w := os.Stdout
 	sink := zapcore.AddSync(w)
 
 	return Config{
@@ -116,7 +119,7 @@ func NewProduction() Config {
 		Encoder:     zapcore.NewJSONEncoder(encoderConfig),
 		WriteSyncer: sink,
 		InitialFields: map[string]interface{}{
-			"app_name": cfg.AppConfig.AppName,
+			"app_name": cfg.AppConfig.App.Name,
 		},
 		//Sampling: &zap.SamplingConfig{
 		//	Initial:    100,

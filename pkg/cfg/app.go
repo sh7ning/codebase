@@ -11,14 +11,18 @@ import (
 var AppConfig app
 
 type app struct {
-	AppDebug       bool                `mapstructure:"app_debug"`
-	ErrorReporting bool                `mapstructure:"error_reporting"`
-	LogFile        string              `mapstructure:"log_file" validate:"required"`
-	AppName        string              `mapstructure:"app_name" validate:"required"`
-	HttpServer     HttpServer          `mapstructure:"http_server" validate:"required"`
-	DB             map[string]DB       `mapstructure:"db" validate:"required,dive"`
-	Redis          map[string]Redis    `mapstructure:"redis" validate:"dive"`
-	DingTalk       map[string]DingTalk `mapstructure:"dingtalk"`
+	AppDebug   bool                `mapstructure:"app_debug"`
+	App        App                 `mapstructure:"app" validate:"required,dive"`
+	HttpServer HttpServer          `mapstructure:"http_server" validate:"required"`
+	DB         map[string]DB       `mapstructure:"db" validate:"required,dive"`
+	Redis      map[string]Redis    `mapstructure:"redis" validate:"dive"`
+	DingTalk   map[string]DingTalk `mapstructure:"dingtalk"`
+}
+
+type App struct {
+	Name           string `mapstructure:"name" validate:"required"`
+	LogFile        string `mapstructure:"log_file"`
+	ErrorReporting bool   `mapstructure:"error_reporting"`
 }
 
 type HttpServer struct {
