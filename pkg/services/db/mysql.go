@@ -3,7 +3,7 @@ package db
 import (
 	"app/pkg/cfg"
 	"app/pkg/services/log"
-	"sync"
+	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -12,8 +12,16 @@ import (
 )
 
 var (
-	dbList = sync.Map{}
+	dbList   = make(map[string]*gorm.DB)
+	dbLogger = &logger{}
 )
+
+type logger struct {
+}
+
+func (l logger) Print(v ...interface{}) {
+	log.Debug("db log", zap.Any("v", v))
+}
 
 func newDB(name string, config cfg.DB) (*gorm.DB, error) {
 	db, err := gorm.Open(config.Type, config.DSN)
@@ -22,7 +30,7 @@ func newDB(name string, config cfg.DB) (*gorm.DB, error) {
 	}
 	//defer db.Close()
 	db.LogMode(cfg.AppConfig.AppDebug)
-	//db.SetLogger(log1.New(os.Stdout, "\r\n", 0))
+	db.SetLogger(dbLogger)
 
 	db.DB().SetConnMaxLifetime(time.Duration(config.ConnMaxLifetime) * time.Second)
 	db.DB().SetMaxIdleConns(config.MaxIdleConns)
@@ -31,9 +39,25 @@ func newDB(name string, config cfg.DB) (*gorm.DB, error) {
 	// Disable table name's pluralization, if set to true, `User`'s table name will be `user`
 	db.SingularTable(true)
 
-	dbList.Store(name, db)
-	//dbList[name] = db
 	return db, nil
+}
+
+func InitConnections() {
+	for conn, config := range cfg.AppConfig.DB {
+		db, err := newDB(conn, config)
+		if err != nil {
+			log.Panic("不存在的 db: "+conn, zap.Error(err))
+		}
+		dbList[conn] = db
+	}
+}
+
+func Close() {
+	for conn, db := range dbList {
+		if err := db.Close(); err != nil {
+			log.Error(fmt.Sprintf("db: %s close error: %s", conn, err.Error()))
+		}
+	}
 }
 
 func Connection(conn string) *gorm.DB {
@@ -41,20 +65,5 @@ func Connection(conn string) *gorm.DB {
 		conn = "default"
 	}
 
-	db, ok := dbList.Load(conn)
-	if !ok {
-		if config, ok := cfg.AppConfig.DB[conn]; ok {
-			var err error
-			db, err = newDB(conn, config)
-			if err != nil {
-				log.Panic("不存在的 db: "+conn, zap.Error(err))
-			}
-		} else {
-			log.Error("不存在的 db 配置: " + conn)
-
-			return nil
-		}
-	}
-
-	return db.(*gorm.DB)
+	return dbList[conn]
 }

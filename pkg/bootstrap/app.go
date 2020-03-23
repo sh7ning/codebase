@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"app/pkg/cfg"
+	"app/pkg/services/db"
 	"app/pkg/services/log"
 	"app/pkg/utils/helper"
 	"app/pkg/web"
@@ -28,6 +29,9 @@ func Run(cfgFile string, flagSet *pflag.FlagSet) {
 
 	log.Info("Using cfg file: " + configFile)
 	log.Debug("cfg data", zap.String("config_data", helper.ToJsonString(cfg.AppConfig)))
+
+	defer db.Close()
+	db.InitConnections()
 
 	//运行 api server
 	httpServer := web.New()
