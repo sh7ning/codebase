@@ -3,7 +3,9 @@ package bootstrap
 import (
 	"app/pkg/cfg"
 	"app/pkg/services/db"
+	"app/pkg/services/dingtalk"
 	"app/pkg/services/log"
+	"app/pkg/services/redis"
 	"app/pkg/utils/helper"
 	"app/pkg/web"
 	"context"
@@ -32,6 +34,10 @@ func Run(cfgFile string, flagSet *pflag.FlagSet) {
 
 	defer db.Close()
 	db.InitConnections()
+
+	redis.InitConnections()
+
+	dingtalk.InitInstances()
 
 	//运行 api server
 	httpServer := web.New()

@@ -11,7 +11,7 @@ import (
 
 var redisConnections = make(map[string]*redis.Client)
 
-func newRedis(conn string, addr string, password string, db int) error {
+func newRedis(conn string, addr string, password string, db int) (*redis.Client, error) {
 	log.Info("连接 redis: " + addr)
 	redisPool := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -25,28 +25,26 @@ func newRedis(conn string, addr string, password string, db int) error {
 	})
 
 	if err := redisPool.Ping().Err(); err != nil {
-		return errors.New("redis 连接失败: " + err.Error())
+		return nil, errors.New("redis 连接失败: " + err.Error())
 	}
 
-	redisConnections[conn] = redisPool
-	return nil
+	return redisPool, nil
+}
+
+func InitConnections() {
+	for conn, config := range cfg.AppConfig.Redis {
+		redisPool, err := newRedis(conn, config.Addr, config.Password, config.Db)
+		if err != nil {
+			log.Panic("不存在的 redis: " + conn)
+		}
+
+		redisConnections[conn] = redisPool
+	}
 }
 
 func Connection(conn string) *redis.Client {
 	if conn == "" {
 		conn = "default"
-	}
-
-	if _, ok := redisConnections[conn]; !ok {
-		if config, ok := cfg.AppConfig.Redis[conn]; ok {
-			if err := newRedis(conn, config.Addr, config.Password, config.Db); err != nil {
-				log.Panic("不存在的 redis: " + conn)
-			}
-		} else {
-			log.Error("不存在的 redis 配置: " + conn)
-
-			return nil
-		}
 	}
 
 	return redisConnections[conn]
