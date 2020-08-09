@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"app/pkg/web/response"
+	"codebase/pkg/web/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

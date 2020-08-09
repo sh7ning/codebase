@@ -1,11 +1,9 @@
 package web
 
 import (
-	"app/pkg/cfg"
-	"app/pkg/web/middlewares/auth"
-	"app/pkg/web/middlewares/errors"
-	"app/pkg/web/middlewares/logger"
-	"app/pkg/web/routes"
+	"codebase/pkg/web/middlewares/auth"
+	"codebase/pkg/web/middlewares/errors"
+	"codebase/pkg/web/middlewares/logger"
 	"net/http"
 	"time"
 
@@ -13,37 +11,38 @@ import (
 	cors "github.com/rs/cors/wrapper/gin"
 )
 
-func New() *http.Server {
-	engine := getEngine()
+type Config struct {
+	Address string `mapstructure:"address" validate:"required"`
+	Token   string `mapstructure:"token"`
+}
+
+func NewEngine(debug bool) *gin.Engine {
+	//mode: debug | release | test
+	if debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	engine := gin.New()
+
+	return engine
+}
+
+func NewServer(engine *gin.Engine, config *Config) *http.Server {
+	engine.Use(logger.Logger(), errors.Recovery(), auth.Check(config.Token), cors.AllowAll())
+	engine.NoRoute(errors.NoFound())
+
+	//handle static file
+	//engine.StaticFile("/", "public/index.html")
+	//engine.StaticFile("/favicon.ico", "public/favicon.ico")
+	//engine.Static("/static", "public/static")
 
 	return &http.Server{
-		Addr: cfg.AppConfig.HttpServer.Address,
+		Addr: config.Address,
 		//Handler:        http.TimeoutHandler(engine, 60*time.Second, "request timeout"),
 		Handler:      engine,
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
 		//IdleTimeout:	30 * time.Second,
 	}
-}
-
-func getEngine() *gin.Engine {
-	//mode: debug | release | test
-	if cfg.AppConfig.AppDebug {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
-	engine := gin.New()
-	engine.Use(logger.Logger(), errors.Recovery(), auth.Check(), cors.AllowAll())
-	engine.NoRoute(errors.NoFound())
-
-	//handle static file
-	engine.Static("/static", "public/static")
-	engine.StaticFile("/favicon.ico", "public/favicon.ico")
-	engine.StaticFile("/", "public/index.html")
-
-	routes.Routes(engine)
-
-	return engine
 }

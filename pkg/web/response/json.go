@@ -1,7 +1,7 @@
 package response
 
 import (
-	"app/pkg/services/log"
+	"codebase/pkg/log"
 	"net/http"
 	"net/http/httputil"
 

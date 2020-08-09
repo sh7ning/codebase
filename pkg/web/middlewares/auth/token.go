@@ -1,15 +1,14 @@
 package auth
 
 import (
-	"app/pkg/cfg"
-	"app/pkg/web/response"
+	"codebase/pkg/web/response"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Check() gin.HandlerFunc {
+func Check(authToken string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if token := c.GetHeader("X-API-TOKEN"); token != cfg.AppConfig.HttpServer.Token {
+		if token := c.GetHeader("X-API-TOKEN"); token != authToken {
 			response.ErrorJson(c, response.CodeUnauthorized, "token error")
 			c.Abort()
 			return

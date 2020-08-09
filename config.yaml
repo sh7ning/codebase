@@ -1,0 +1,30 @@
+app_name: api
+
+app_debug: true
+
+logging:
+  level: warn
+  log_file: ""
+
+http_server:
+  address: 0.0.0.0:8080
+  token: ""
+
+db:
+  default:
+    type: mysql
+    dsn: root:${DB_PASSWORD}@tcp(127.0.0.1:3306)/test?charset=utf8mb4&collation=utf8mb4_general_ci&loc=Local&parseTime=true
+    conn_max_lifetime: 60s
+    max_idle_conns: 5
+    max_open_conns: 10
+
+redis:
+  default:
+    addr: 127.0.0.1:6379
+    password: ""
+    db: 0
+
+dingtalk:
+  default:
+    token: "xx"
+    secret: "yy"

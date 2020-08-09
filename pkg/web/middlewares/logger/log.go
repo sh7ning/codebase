@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"app/pkg/services/log"
+	"codebase/pkg/log"
 	"time"
 
 	"github.com/gin-gonic/gin"
