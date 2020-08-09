@@ -13,4 +13,4 @@ if [ -n "$1" ] ;then
     port=$1
 fi
 
-$GIN -p="$port" -a=8080 -b="runtime/app" -i --all --excludeDir="runtime" --excludeDir=".idea" --buildArgs="-ldflags '-s -w'" --build="." "start" "-c" "config.yaml"
+$GIN -p="$port" -a=8080 -b="runtime/app" -i --all --excludeDir="runtime" --excludeDir=".idea" --buildArgs="-ldflags '-s -w'" --build="./app/api/app/cmd" "start" "-c" "config.yaml"
