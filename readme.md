@@ -10,6 +10,12 @@
 * Run
 
 ```
+go run app/api/app/cmd/main.go start -c config.yaml
+```
+
+or
+
+```
 ./auto-build-dev
 ```
 
