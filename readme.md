@@ -2,7 +2,7 @@
 
 ## 配置
 
-1. `cp config.example.yaml config.yaml`
+1. `cp app/api/app/cmd/config.example.yaml config.yaml`
 2. `vim config.yaml`
 
 ## Development
