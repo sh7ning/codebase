@@ -87,6 +87,7 @@ func LoadConfig(config interface{}, cfgFile string, flagSet *pflag.FlagSet, keys
 	}
 
 	//watch 配置文件更新
+	//go get github.com/fsnotify/fsnotify
 	//v.WatchConfig()
 	//v.OnConfigChange(func(in fsnotify.Event) {})
 
