@@ -5,7 +5,6 @@ import (
 	"codebase/app/api/app/services"
 	"codebase/app/api/app/web/routes"
 	"codebase/pkg/config"
-	"codebase/pkg/dingtalk"
 	"codebase/pkg/gorm"
 	"codebase/pkg/helper"
 	"codebase/pkg/log"
@@ -29,8 +28,6 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 		panic(err)
 	}
 
-	dingtalks := dingtalk.InitConnections(cfg.Config.DingTalk)
-
 	//init logger
 	cfg.Config.InitLoggerConfig()
 	log.New(cfg.Config.LoggerConfig)
@@ -44,7 +41,7 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 
 	redisConnections := redis.InitConnections(cfg.Config.Redis)
 
-	services.InitAppService(dbConnections, redisConnections, dingtalks)
+	services.InitAppService(dbConnections, redisConnections, cfg.Config.DingTalk)
 
 	//运行 api server
 	engine := web.NewEngine(cfg.Config.AppDebug)

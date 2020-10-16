@@ -13,13 +13,13 @@ type Service struct {
 
 	RedisConnections *redis.Connections
 
-	Dingtalks *dingtalk.Connections
+	Dingtalks dingtalk.Configs
 }
 
 func InitAppService(
 	dbConnections *gorm.Connections,
 	redisConnections *redis.Connections,
-	dingtalks *dingtalk.Connections) {
+	dingtalks dingtalk.Configs) {
 	AppService = &Service{
 		DbConnections:    dbConnections,
 		RedisConnections: redisConnections,
