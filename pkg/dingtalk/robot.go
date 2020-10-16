@@ -13,15 +13,25 @@ import (
 	"time"
 )
 
-type Config struct {
+type Configs map[string]*Robot
+
+func (configs Configs) Get(conn string) *Robot {
+	if conn == "" {
+		conn = "default"
+	}
+
+	return configs[conn]
+}
+
+type Robot struct {
 	Token  string `mapstructure:"token" validate:"required"`
 	Secret string `mapstructure:"secret"`
 }
 
-func NewRobot(config *Config) *Robot {
+func NewRobot(token, secret string) *Robot {
 	return &Robot{
-		token:  config.Token,
-		secret: config.Secret,
+		Token:  token,
+		Secret: secret,
 	}
 }
 
@@ -33,10 +43,6 @@ func sign(t int64, secret string) string {
 	return base64.StdEncoding.EncodeToString(data)
 }
 
-type Robot struct {
-	token, secret string
-}
-
 func (robot *Robot) SendMessage(msg interface{}) error {
 	body := bytes.NewBuffer(nil)
 	err := json.NewEncoder(body).Encode(msg)
@@ -45,11 +51,11 @@ func (robot *Robot) SendMessage(msg interface{}) error {
 	}
 
 	value := url.Values{}
-	value.Set("access_token", robot.token)
-	if robot.secret != "" {
+	value.Set("access_token", robot.Token)
+	if robot.Secret != "" {
 		t := time.Now().UnixNano() / 1e6
 		value.Set("timestamp", fmt.Sprintf("%d", t))
-		value.Set("sign", sign(t, robot.secret))
+		value.Set("sign", sign(t, robot.Secret))
 	}
 
 	request, err := http.NewRequest(http.MethodPost, "https://oapi.dingtalk.com/robot/send", body)
