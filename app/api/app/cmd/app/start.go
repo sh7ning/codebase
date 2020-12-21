@@ -1,7 +1,7 @@
 package app
 
 import (
-	"codebase/app/api/app/bootstrap"
+	"codebase/app/api/app/internal/bootstrap"
 
 	"github.com/spf13/cobra"
 )

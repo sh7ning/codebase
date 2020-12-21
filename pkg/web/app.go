@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	cors "github.com/rs/cors/wrapper/gin"
 )
 
 type Config struct {
@@ -16,7 +16,7 @@ type Config struct {
 	Token   string `mapstructure:"token"`
 }
 
-func NewEngine(debug bool) *gin.Engine {
+func NewEngine(debug bool, config *Config) *gin.Engine {
 	//mode: debug | release | test
 	if debug {
 		gin.SetMode(gin.DebugMode)
@@ -24,14 +24,13 @@ func NewEngine(debug bool) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	engine := gin.New()
+	engine.Use(logger.Logger(), errors.Recovery(), auth.Check(config.Token), cors.Default())
+	engine.NoRoute(errors.NoFound())
 
 	return engine
 }
 
 func NewServer(engine *gin.Engine, config *Config) *http.Server {
-	engine.Use(logger.Logger(), errors.Recovery(), auth.Check(config.Token), cors.AllowAll())
-	engine.NoRoute(errors.NoFound())
-
 	//handle static file
 	//engine.StaticFile("/", "public/index.html")
 	//engine.StaticFile("/favicon.ico", "public/favicon.ico")

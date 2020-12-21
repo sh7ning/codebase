@@ -33,13 +33,17 @@ func LogError(c *gin.Context, error interface{}) {
 }
 
 func ErrorJson(c *gin.Context, code int, msg string) {
-	ErrorJsonWithStatusCode(c, http.StatusOK, code, msg)
+	ErrorJsonWithStatusCode(c, http.StatusOK, code, nil, msg)
 }
 
-func ErrorJsonWithStatusCode(c *gin.Context, statusCode, code int, msg string) {
+func ErrorJsonWithData(c *gin.Context, code int, data interface{}, msg string) {
+	ErrorJsonWithStatusCode(c, http.StatusOK, code, data, msg)
+}
+
+func ErrorJsonWithStatusCode(c *gin.Context, statusCode, code int, data interface{}, msg string) {
 	c.JSON(statusCode, &Response{
 		Code: code,
-		Data: nil,
+		Data: data,
 		Msg:  msg,
 	})
 }

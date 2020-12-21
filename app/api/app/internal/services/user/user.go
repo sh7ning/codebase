@@ -1,9 +1,9 @@
 package user
 
 import (
-	"codebase/app/api/app/models"
-	"codebase/app/api/app/repositories/user"
-	"codebase/app/api/app/services/user/params"
+	"codebase/app/api/app/internal/models"
+	"codebase/app/api/app/internal/repositories/user"
+	"codebase/app/api/app/internal/services/user/params"
 	"codebase/pkg/log"
 
 	"github.com/jinzhu/gorm"

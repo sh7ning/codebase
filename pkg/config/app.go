@@ -9,6 +9,6 @@ type AppConfig struct {
 }
 
 func (appCfg *AppConfig) InitLoggerConfig() {
-	appCfg.LoggerConfig.Development = appCfg.AppDebug
 	appCfg.LoggerConfig.AppName = appCfg.AppName
+	appCfg.LoggerConfig.Development = appCfg.AppDebug
 }

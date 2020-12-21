@@ -37,7 +37,11 @@ func (conns *Connections) Connection(conn string) *redis.Client {
 		conn = "default"
 	}
 
-	return conns.connections[conn]
+	if cli, ok := conns.connections[conn]; ok {
+		return cli
+	}
+
+	return nil
 }
 
 func (conns *Connections) Publish(conn string, channel string, message interface{}) error {

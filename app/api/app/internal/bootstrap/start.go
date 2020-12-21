@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"codebase/app/api/app/cfg"
-	"codebase/app/api/app/services"
-	"codebase/app/api/app/web/routes"
+	"codebase/app/api/app/internal/cfg"
+	"codebase/app/api/app/internal/services"
+	"codebase/app/api/app/internal/web/routes"
 	"codebase/pkg/config"
 	"codebase/pkg/gorm"
 	"codebase/pkg/helper"
@@ -16,9 +16,8 @@ import (
 	"syscall"
 	"time"
 
-	"go.uber.org/zap"
-
 	"github.com/spf13/pflag"
+	"go.uber.org/zap"
 )
 
 func Start(cfgFile string, flagSet *pflag.FlagSet) {
@@ -44,7 +43,7 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	services.InitAppService(dbConnections, redisConnections, cfg.Config.DingTalk)
 
 	//运行 api server
-	engine := web.NewEngine(cfg.Config.AppDebug)
+	engine := web.NewEngine(cfg.Config.AppDebug, cfg.Config.HttpServer)
 	routes.Routes(engine)
 	httpServer := web.NewServer(engine, cfg.Config.HttpServer)
 
@@ -68,15 +67,11 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	sig := <-quit
 	log.Warn("get signal, start shutdown server ...", zap.Any("signal", sig))
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := httpServer.Shutdown(ctx); err != nil {
 		log.Fatal("Server Shutdown", zap.Error(err))
 	}
-	// catching ctx.Done(). timeout of 5 seconds.
-	select {
-	case <-ctx.Done():
-		log.Warn("server shutdown with timeout of 2 seconds.")
-	}
-	log.Warn("Server exiting")
+
+	log.Info("Server exiting")
 }

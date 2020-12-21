@@ -9,7 +9,7 @@ import (
 
 func NoFound() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		response.ErrorJsonWithStatusCode(c, http.StatusNotFound, response.CodeNotFound, "api not found")
+		response.ErrorJsonWithStatusCode(c, http.StatusNotFound, response.CodeNotFound, nil, "api not found")
 		//http.NotFound(c.Writer, c.Request)
 	}
 }

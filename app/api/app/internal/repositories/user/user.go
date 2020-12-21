@@ -1,7 +1,7 @@
 package user
 
 import (
-	"codebase/app/api/app/models"
+	"codebase/app/api/app/internal/models"
 
 	"github.com/jinzhu/gorm"
 )

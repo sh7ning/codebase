@@ -5,8 +5,7 @@ import (
 )
 
 func main() {
-	cmd := app.NewApiAppCommand()
-	if err := cmd.Execute(); err != nil {
+	if err := app.NewApiAppCommand().Execute(); err != nil {
 		panic(err)
 	}
 }
