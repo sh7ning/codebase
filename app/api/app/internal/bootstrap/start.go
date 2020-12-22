@@ -22,7 +22,7 @@ import (
 
 func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	//load cfg
-	viper, err := config.LoadConfig(cfg.Config, cfgFile, flagSet, nil)
+	c, err := config.LoadConfig(cfg.Config, cfgFile, flagSet, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +32,7 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	log.New(cfg.Config.LoggerConfig)
 	defer log.Sync()
 
-	log.Info("using cfg file: " + viper.ConfigFileUsed())
+	log.Info("using cfg file: " + c.ConfigFileUsed())
 	log.Debug("cfg data", zap.String("config_data", helper.ToJsonString(cfg.Config)))
 
 	dbConnections := gorm.InitConnections(cfg.Config.AppDebug, cfg.Config.DB)

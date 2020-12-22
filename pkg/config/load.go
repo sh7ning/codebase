@@ -4,6 +4,7 @@ import (
 	"os"
 	"reflect"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/go-playground/validator/v10"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/pflag"
@@ -71,7 +72,23 @@ func UnmarshalConfig(rawConfig map[string]interface{}, tmpInitCfg interface{}) e
 	return nil
 }
 
-func LoadConfig(config interface{}, cfgFile string, flagSet *pflag.FlagSet, keys map[string]string) (*viper.Viper, error) {
+type Config struct {
+	v *viper.Viper
+}
+
+func (c *Config) ConfigFileUsed() string {
+	return c.v.ConfigFileUsed()
+}
+
+func (c *Config) WatchConfig() {
+	c.v.WatchConfig()
+}
+
+func (c *Config) OnConfigChange(run func(in fsnotify.Event)) {
+	c.v.OnConfigChange(run)
+}
+
+func LoadConfig(config interface{}, cfgFile string, flagSet *pflag.FlagSet, keys map[string]string) (*Config, error) {
 	v := viper.New()
 	v.SetConfigFile(cfgFile)
 	v.SetConfigType("yaml")
@@ -96,5 +113,7 @@ func LoadConfig(config interface{}, cfgFile string, flagSet *pflag.FlagSet, keys
 		return nil, err
 	}
 
-	return v, nil
+	return &Config{
+		v: v,
+	}, nil
 }
