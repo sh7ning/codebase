@@ -41,3 +41,7 @@ docker push docker.example.com/sh7ning/codebase-api-app:v0.0.1
 
 ## Todo
 
+grpc，服务发现，熔断，限流，prometheus
+
+* https://github.com/douyu/jupiter
+* https://github.com/go-kratos/kratos
