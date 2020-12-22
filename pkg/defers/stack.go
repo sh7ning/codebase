@@ -4,25 +4,25 @@ import (
 	"sync"
 )
 
-func newStack() *deferStack {
-	return &deferStack{
+func NewStack() *DeferStack {
+	return &DeferStack{
 		fns: make([]func() error, 0),
 		mu:  sync.RWMutex{},
 	}
 }
 
-type deferStack struct {
+type DeferStack struct {
 	fns []func() error
 	mu  sync.RWMutex
 }
 
-func (ds *deferStack) push(fns ...func() error) {
+func (ds *DeferStack) Push(fns ...func() error) {
 	ds.mu.Lock()
 	defer ds.mu.Unlock()
 	ds.fns = append(ds.fns, fns...)
 }
 
-func (ds *deferStack) run() {
+func (ds *DeferStack) Run() {
 	ds.mu.Lock()
 	defer ds.mu.Unlock()
 	for i := len(ds.fns) - 1; i >= 0; i-- {

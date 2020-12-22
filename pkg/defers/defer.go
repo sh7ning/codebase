@@ -1,15 +1,15 @@
 package defers
 
 var (
-	globalDefers = newStack()
+	globalDefers = NewStack()
 )
 
 // Register 注册一个defer函数
 func Register(fns ...func() error) {
-	globalDefers.push(fns...)
+	globalDefers.Push(fns...)
 }
 
 // Run 运行
 func Run() {
-	globalDefers.run()
+	globalDefers.Run()
 }
