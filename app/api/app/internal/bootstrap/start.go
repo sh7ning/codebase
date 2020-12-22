@@ -37,9 +37,9 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	log.Info("using cfg file: " + c.ConfigFileUsed())
 	log.Debug("cfg data", zap.String("config_data", helper.ToJsonString(cfg.Config)))
 
-	dbConnections := gorm.InitConnections(cfg.Config.AppDebug, cfg.Config.DB)
+	dbConnections := gorm.Init(cfg.Config.AppDebug, cfg.Config.DB)
 
-	redisConnections := redis.InitConnections(cfg.Config.Redis)
+	redisConnections := redis.Init(cfg.Config.Redis)
 
 	services.InitAppService(dbConnections, redisConnections, cfg.Config.DingTalk)
 

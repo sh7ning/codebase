@@ -13,16 +13,6 @@ import (
 	"time"
 )
 
-type Configs map[string]*Robot
-
-func (configs Configs) Get(conn string) *Robot {
-	if conn == "" {
-		conn = "default"
-	}
-
-	return configs[conn]
-}
-
 type Robot struct {
 	Token  string `mapstructure:"token" validate:"required"`
 	Secret string `mapstructure:"secret"`

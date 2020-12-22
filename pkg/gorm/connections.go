@@ -12,29 +12,33 @@ type Configs map[string]*Config
 
 type Connections struct {
 	configs     Configs
-	connections map[string]*gorm.DB
+	collections map[string]*gorm.DB
 }
 
-func InitConnections(debug bool, configs Configs) *Connections {
-	connections := make(map[string]*gorm.DB)
+func Init(debug bool, configs Configs) *Connections {
+	collections := make(map[string]*gorm.DB)
 	for name, config := range configs {
 		db, err := NewDB(debug, config)
 		if err != nil {
 			log.Panic(fmt.Sprintf("NewDB error, name: %s, error: %s", name, err.Error()), zap.Error(err))
 		}
-		connections[name] = db
+		collections[name] = db
 	}
 
 	return &Connections{
 		configs:     configs,
-		connections: connections,
+		collections: collections,
 	}
 }
 
-func (conns *Connections) Connection(conn string) *gorm.DB {
+func (c *Connections) Get(conn string) *gorm.DB {
 	if conn == "" {
 		conn = "default"
 	}
 
-	return conns.connections[conn]
+	if obj, ok := c.collections[conn]; ok {
+		return obj
+	}
+
+	return nil
 }
