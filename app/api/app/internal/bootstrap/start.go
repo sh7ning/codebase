@@ -1,21 +1,13 @@
 package bootstrap
 
 import (
-	"codebase/app/api/app/internal/cfg"
-	"codebase/app/api/app/internal/services"
-	"codebase/app/api/app/internal/web/routes"
-	"codebase/pkg/config"
+	"codebase/app/api/app/internal/global"
+	"codebase/app/api/app/internal/web"
 	"codebase/pkg/defers"
-	"codebase/pkg/gorm"
-	"codebase/pkg/helper"
 	"codebase/pkg/log"
-	"codebase/pkg/redis"
-	"codebase/pkg/web"
-	"context"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/spf13/pflag"
 	"go.uber.org/zap"
@@ -24,37 +16,10 @@ import (
 func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	defer defers.Run()
 
-	//load cfg
-	c, err := config.LoadConfig(cfg.Config, cfgFile, flagSet, nil)
-	if err != nil {
-		panic(err)
-	}
+	//初始化全局变量
+	global.Init(cfgFile, flagSet)
 
-	//init logger
-	cfg.Config.InitLoggerConfig()
-	log.New(cfg.Config.Logger)
-
-	log.Info("using cfg file: " + c.ConfigFileUsed())
-	log.Debug("cfg data", zap.String("config_data", helper.ToJsonString(cfg.Config)))
-
-	dbConnections := gorm.Init(cfg.Config.AppDebug, cfg.Config.DB)
-
-	redisConnections := redis.Init(cfg.Config.Redis)
-
-	services.InitAppService(dbConnections, redisConnections, cfg.Config.DingTalk)
-
-	//运行 api server
-	engine := web.NewEngine(cfg.Config.AppDebug, cfg.Config.HttpServer)
-	routes.Routes(engine)
-	httpServer := web.NewServer(engine, cfg.Config.HttpServer)
-
-	go func() {
-		if err := httpServer.ListenAndServe(); err != nil {
-			log.Error("api server ListenAndServe error, "+err.Error(), zap.Error(err))
-		}
-	}()
-
-	log.Info("http server run success, listen: " + cfg.Config.HttpServer.Address)
+	web.New()
 
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// a timeout of 5 seconds.
@@ -67,12 +32,4 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
 	sig := <-quit
 	log.Warn("get signal, start shutdown server ...", zap.Any("signal", sig))
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := httpServer.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown", zap.Error(err))
-	}
-
-	log.Info("Server exiting")
 }

@@ -15,7 +15,7 @@ type Connections struct {
 	collections map[string]*redis.Client
 }
 
-func Init(configs Configs) *Connections {
+func New(configs Configs) *Connections {
 	collections := make(map[string]*redis.Client)
 	for conn, config := range configs {
 		redisPool, err := NewRedis(config)

@@ -52,20 +52,19 @@ func mapStructureParse(input interface{}, output interface{}) error {
 }
 
 //rawConfig: 未解析得 map
-//cfg: 需要解析的 cfg 指针
-//tmpInitCfg: 需要解析的 cfg 的实例化，为了进行原子替换的临时指针
-func UnmarshalConfig(rawConfig map[string]interface{}, tmpInitCfg interface{}) error {
+//config: 需要解析的 cfg 的实例化，为了进行原子替换的临时指针
+func UnmarshalConfig(rawConfig map[string]interface{}, config interface{}) error {
 	// 忽略 .env 是否存在
 	// 选用此库是因为 viper 在用，减少更多的库依赖
 	_ = gotenv.OverLoad(".env")
 	//v.Set("app.redis_prefix_key", v.GetString("app.redis_prefix_key")+":"+v.GetString("symbol")+":")
 
-	if err := mapStructureParse(rawConfig, tmpInitCfg); err != nil {
+	if err := mapStructureParse(rawConfig, config); err != nil {
 		return err
 	}
 	//校验配置
 	validate := validator.New()
-	if err := validate.Struct(tmpInitCfg); err != nil {
+	if err := validate.Struct(config); err != nil {
 		return err
 	}
 

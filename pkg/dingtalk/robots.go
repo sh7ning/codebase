@@ -7,7 +7,7 @@ type Robots struct {
 	collections map[string]*Robot
 }
 
-func Init(configs Configs) *Robots {
+func New(configs Configs) *Robots {
 	collections := make(map[string]*Robot)
 
 	for name, config := range configs {

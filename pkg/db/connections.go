@@ -1,4 +1,4 @@
-package gorm
+package db
 
 import (
 	"codebase/pkg/log"
@@ -15,7 +15,7 @@ type Connections struct {
 	collections map[string]*gorm.DB
 }
 
-func Init(debug bool, configs Configs) *Connections {
+func New(debug bool, configs Configs) *Connections {
 	collections := make(map[string]*gorm.DB)
 	for name, config := range configs {
 		db, err := NewDB(debug, config)

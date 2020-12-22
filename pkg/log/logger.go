@@ -8,13 +8,12 @@ package log
 
 import (
 	"codebase/pkg/defers"
+	"codebase/pkg/dingtalk"
+	"codebase/pkg/helper"
 	"errors"
 	"fmt"
 	"io"
 	"os"
-
-	"codebase/pkg/dingtalk"
-	"codebase/pkg/helper"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -24,7 +23,7 @@ import (
 type LoggerConfig struct {
 	Development bool
 	AppName     string
-	LogFile     string `mapstructure:"log_file"`
+	LogFile     string
 	DingTalk    *dingtalk.Robot
 }
 

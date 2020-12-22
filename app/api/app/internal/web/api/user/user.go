@@ -1,7 +1,7 @@
 package user
 
 import (
-	"codebase/app/api/app/internal/services"
+	"codebase/app/api/app/internal/global"
 	"codebase/app/api/app/internal/services/user"
 	"codebase/app/api/app/internal/services/user/params"
 	"codebase/pkg/log"
@@ -14,7 +14,7 @@ import (
 
 func Get(c *gin.Context) {
 	requestId := c.Param("userId")
-	tx := services.AppService.DbConnections.Connection("")
+	tx := global.DB("")
 	model, err := user.Get(tx, requestId)
 	if err != nil {
 		log.Error("获取用户失败, userId: "+requestId+", error: "+err.Error(), zap.Error(err))
@@ -42,7 +42,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	tx := services.AppService.DbConnections.Connection("")
+	tx := global.DB("")
 	model, err := user.Create(tx, form)
 
 	if err != nil {

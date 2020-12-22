@@ -1,4 +1,4 @@
-package gorm
+package db
 
 import (
 	"codebase/pkg/defers"
