@@ -22,7 +22,7 @@ func (ds *deferStack) push(fns ...func() error) {
 	ds.fns = append(ds.fns, fns...)
 }
 
-func (ds *deferStack) clean() {
+func (ds *deferStack) run() {
 	ds.mu.Lock()
 	defer ds.mu.Unlock()
 	for i := len(ds.fns) - 1; i >= 0; i-- {

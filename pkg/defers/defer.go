@@ -9,7 +9,7 @@ func Register(fns ...func() error) {
 	globalDefers.push(fns...)
 }
 
-// Clean 清除
-func Clean() {
-	globalDefers.clean()
+// Run 清除
+func Run() {
+	globalDefers.run()
 }
