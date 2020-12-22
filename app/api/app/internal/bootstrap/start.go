@@ -16,9 +16,10 @@ import (
 func Start(cfgFile string, flagSet *pflag.FlagSet) {
 	defer defers.Run()
 
-	//初始化全局变量
+	//初始化全局变量，资源等
 	global.Init(cfgFile, flagSet)
 
+	//业务代码开始
 	web.New()
 
 	// Wait for interrupt signal to gracefully shutdown the server with
