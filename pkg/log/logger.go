@@ -8,7 +8,6 @@ package log
 
 import (
 	"codebase/pkg/defers"
-	"codebase/pkg/dingtalk"
 	"codebase/pkg/helper"
 	"errors"
 	"fmt"
@@ -20,11 +19,15 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+type Notify interface {
+	SendTextMessage(content string, atMobiles []string, isAtAll bool) error
+}
+
 type LoggerConfig struct {
 	Development bool
 	AppName     string
 	LogFile     string
-	DingTalk    *dingtalk.Robot
+	Notify      Notify
 }
 
 var logger *zap.Logger
@@ -56,7 +59,7 @@ func New(loggerConfig *LoggerConfig) {
 	}
 
 	opts := make([]zap.Option, 0, 1)
-	if loggerConfig.DingTalk != nil {
+	if loggerConfig.Notify != nil {
 		//warn 级别以上发送钉钉消息
 		opts = append(opts, zap.Hooks(func(entry zapcore.Entry) error {
 			if zap.WarnLevel.Enabled(entry.Level) {
@@ -72,7 +75,7 @@ func New(loggerConfig *LoggerConfig) {
 					if len(stack) > 2048 {
 						entry.Stack = string(stack[:2048])
 					}
-					if err := loggerConfig.DingTalk.SendTextMessage(helper.ToJsonString(entry), nil, false); err != nil {
+					if err := loggerConfig.Notify.SendTextMessage(helper.ToJsonString(entry), nil, false); err != nil {
 						fmt.Println("钉钉发送消息失败:" + err.Error())
 					}
 				}()

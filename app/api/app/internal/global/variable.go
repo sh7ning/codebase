@@ -37,7 +37,7 @@ func Init(cfgFile string, flagSet *pflag.FlagSet) {
 		Development: cfg.Config.AppDebug,
 		AppName:     cfg.Config.AppName,
 		LogFile:     cfg.Config.Logger.File,
-		DingTalk:    nil,
+		Notify:      nil,
 	})
 
 	log.Info("using cfg file: " + c.ConfigFileUsed())
