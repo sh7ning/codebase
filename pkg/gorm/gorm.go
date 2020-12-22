@@ -1,6 +1,7 @@
 package gorm
 
 import (
+	"codebase/pkg/defers"
 	"codebase/pkg/log"
 	"time"
 
@@ -32,7 +33,9 @@ func NewDB(debug bool, config *Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	//defer db.Close()
+	defers.Register(func() error {
+		return db.Close()
+	})
 	db.LogMode(debug)
 	db.SetLogger(dbLogger)
 

@@ -5,6 +5,7 @@ import (
 	"codebase/app/api/app/internal/services"
 	"codebase/app/api/app/internal/web/routes"
 	"codebase/pkg/config"
+	"codebase/pkg/defers"
 	"codebase/pkg/gorm"
 	"codebase/pkg/helper"
 	"codebase/pkg/log"
@@ -21,6 +22,8 @@ import (
 )
 
 func Start(cfgFile string, flagSet *pflag.FlagSet) {
+	defer defers.Run()
+
 	//load cfg
 	c, err := config.LoadConfig(cfg.Config, cfgFile, flagSet, nil)
 	if err != nil {
@@ -29,14 +32,12 @@ func Start(cfgFile string, flagSet *pflag.FlagSet) {
 
 	//init logger
 	cfg.Config.InitLoggerConfig()
-	log.New(cfg.Config.LoggerConfig)
-	defer log.Sync()
+	log.New(cfg.Config.Logger)
 
 	log.Info("using cfg file: " + c.ConfigFileUsed())
 	log.Debug("cfg data", zap.String("config_data", helper.ToJsonString(cfg.Config)))
 
 	dbConnections := gorm.InitConnections(cfg.Config.AppDebug, cfg.Config.DB)
-	defer dbConnections.Close()
 
 	redisConnections := redis.InitConnections(cfg.Config.Redis)
 

@@ -7,6 +7,7 @@
 package log
 
 import (
+	"codebase/pkg/defers"
 	"errors"
 	"fmt"
 	"io"
@@ -83,6 +84,10 @@ func New(loggerConfig *LoggerConfig) {
 	}
 
 	logger = config.Build(opts...)
+
+	defers.Register(func() error {
+		return logger.Sync()
+	})
 }
 
 func NewDevelopment(loggerConfig *LoggerConfig) Config {
@@ -133,10 +138,6 @@ func NewProduction(loggerConfig *LoggerConfig) Config {
 		//	Thereafter: 100,
 		//},
 	}
-}
-
-func Sync() error {
-	return logger.Sync()
 }
 
 //

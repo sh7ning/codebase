@@ -31,14 +31,6 @@ func InitConnections(debug bool, configs Configs) *Connections {
 	}
 }
 
-func (conns *Connections) Close() {
-	for name, db := range conns.connections {
-		if err := db.Close(); err != nil {
-			log.Error(fmt.Sprintf("db: %s close error: %s", name, err.Error()))
-		}
-	}
-}
-
 func (conns *Connections) Connection(conn string) *gorm.DB {
 	if conn == "" {
 		conn = "default"
