@@ -1,10 +1,10 @@
-package app
+package cmd
 
 import (
 	"github.com/spf13/cobra"
 )
 
-func NewApiAppCommand() *cobra.Command {
+func New() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "api",
 		Short: "The api app",
