@@ -1,20 +1,20 @@
 package user
 
 import (
+	"codebase/app/api/app/internal/global"
 	"codebase/app/api/app/internal/models"
 	"codebase/app/api/app/internal/repositories/user"
-	"codebase/app/api/app/internal/services/user/params"
 	"codebase/pkg/log"
 
-	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 )
 
-func Create(tx *gorm.DB, form params.UserCreateRequest) (*models.User, error) {
-	model, err := user.Create(tx, form.Name)
+func Create(name string) (*models.User, error) {
+	tx := global.DB("")
+	model, err := user.Create(tx, name)
 
 	if err != nil {
-		log.Error("user 写入失败", zap.Error(err), zap.String("name", form.Name))
+		log.Error("user 写入失败", zap.Error(err), zap.String("name", name))
 
 		return nil, nil
 	}
@@ -22,6 +22,7 @@ func Create(tx *gorm.DB, form params.UserCreateRequest) (*models.User, error) {
 	return model, nil
 }
 
-func Get(tx *gorm.DB, userId string) (*models.User, error) {
+func Get(userId string) (*models.User, error) {
+	tx := global.DB("")
 	return user.Get(tx, userId)
 }
