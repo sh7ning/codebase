@@ -7,6 +7,7 @@ import (
 	"codebase/pkg/log"
 	"codebase/pkg/web"
 	"codebase/pkg/web/middlewares/auth"
+	"codebase/pkg/web/middlewares/logger"
 	"context"
 	"net/http"
 	"time"
@@ -18,7 +19,7 @@ import (
 //运行 api server
 func New() *http.Server {
 	engine := web.NewEngine(cfg.Config.AppDebug)
-	engine.Use(auth.Check(cfg.Config.HttpServer.Token), cors.Default())
+	engine.Use(logger.Logger(), auth.Check(cfg.Config.HttpServer.Token), cors.Default())
 	routes.Routes(engine)
 	httpServer := web.NewServer(engine, &cfg.Config.HttpServer.Config)
 

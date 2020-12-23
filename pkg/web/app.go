@@ -2,7 +2,6 @@ package web
 
 import (
 	"codebase/pkg/web/middlewares/errors"
-	"codebase/pkg/web/middlewares/logger"
 	"net/http"
 	"time"
 
@@ -21,7 +20,7 @@ func NewEngine(debug bool) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	engine := gin.New()
-	engine.Use(logger.Logger(), errors.Recovery())
+	engine.Use(errors.Recovery())
 	engine.NoRoute(errors.NoFound())
 
 	return engine
