@@ -1,22 +1,19 @@
 package web
 
 import (
-	"codebase/pkg/web/middlewares/auth"
 	"codebase/pkg/web/middlewares/errors"
 	"codebase/pkg/web/middlewares/logger"
 	"net/http"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 type Config struct {
 	Address string `mapstructure:"address" validate:"required"`
-	Token   string `mapstructure:"token"`
 }
 
-func NewEngine(debug bool, config *Config) *gin.Engine {
+func NewEngine(debug bool) *gin.Engine {
 	//mode: debug | release | test
 	if debug {
 		gin.SetMode(gin.DebugMode)
@@ -24,7 +21,7 @@ func NewEngine(debug bool, config *Config) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	engine := gin.New()
-	engine.Use(logger.Logger(), errors.Recovery(), auth.Check(config.Token), cors.Default())
+	engine.Use(logger.Logger(), errors.Recovery())
 	engine.NoRoute(errors.NoFound())
 
 	return engine

@@ -6,18 +6,21 @@ import (
 	"codebase/pkg/defers"
 	"codebase/pkg/log"
 	"codebase/pkg/web"
+	"codebase/pkg/web/middlewares/auth"
 	"context"
 	"net/http"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"go.uber.org/zap"
 )
 
 //运行 api server
 func New() *http.Server {
-	engine := web.NewEngine(cfg.Config.AppDebug, cfg.Config.HttpServer)
+	engine := web.NewEngine(cfg.Config.AppDebug)
+	engine.Use(auth.Check(cfg.Config.HttpServer.Token), cors.Default())
 	routes.Routes(engine)
-	httpServer := web.NewServer(engine, cfg.Config.HttpServer)
+	httpServer := web.NewServer(engine, &cfg.Config.HttpServer.Config)
 
 	go func() {
 		if err := httpServer.ListenAndServe(); err != nil {
