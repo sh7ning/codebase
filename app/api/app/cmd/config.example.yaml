@@ -3,7 +3,7 @@ app_name: api
 app_debug: true
 
 logging:
-  log_file: ""
+  file: ""
 
 http_server:
   address: 0.0.0.0:8080
