@@ -10,9 +10,9 @@ import (
 	"codebase/pkg/redis"
 
 	redisCli "github.com/go-redis/redis"
-	"github.com/jinzhu/gorm"
 	"github.com/spf13/pflag"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 var g *Services

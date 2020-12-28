@@ -1,8 +1,10 @@
 package user
 
 import (
+	"codebase/app/api/app/internal/models"
 	"codebase/app/api/app/internal/services/user"
 	"codebase/app/api/app/internal/web/controllers/user/params"
+	"codebase/pkg/helper"
 	"codebase/pkg/log"
 	"codebase/pkg/web/response"
 
@@ -30,6 +32,29 @@ func Create(c *gin.Context) {
 	response.SuccessJSON(c, gin.H{
 		"id":   model.Id,
 		"name": model.Name,
+	})
+}
+
+func List(c *gin.Context) {
+	var form params.UserListRequest
+	if err := c.ShouldBindWith(&form, binding.Form); err != nil {
+		log.Debug("List CodeParamsError", zap.Error(err))
+		response.ErrorJson(c, response.CodeParamsError, err.Error())
+		return
+	}
+
+	data, total, err := user.List(form.Page, form.PageSize)
+	if err != nil {
+		log.Error("获取用户列表失败, request: "+helper.ToJsonString(form), zap.Error(err))
+		response.ErrorJson(c, response.CodeSystemError, err.Error())
+		return
+	}
+
+	response.SuccessJSON(c, models.PageResponse{
+		Page:     form.Page,
+		PageSize: form.PageSize,
+		Total:    total,
+		Items:    data,
 	})
 }
 

@@ -3,20 +3,23 @@ package user
 import (
 	"codebase/app/api/app/internal/global"
 	"codebase/app/api/app/internal/models"
-	"codebase/app/api/app/internal/repositories/user"
 	"codebase/pkg/log"
+	"errors"
+
+	"gorm.io/gorm"
 
 	"go.uber.org/zap"
 )
 
 func Create(name string) (*models.User, error) {
 	tx := global.DB("")
-	model, err := user.Create(tx, name)
+	model := &models.User{
+		Name: name,
+	}
 
-	if err != nil {
+	if err := tx.Create(model).Error; err != nil {
 		log.Error("user 写入失败", zap.Error(err), zap.String("name", name))
-
-		return nil, nil
+		return nil, err
 	}
 
 	return model, nil
@@ -24,5 +27,26 @@ func Create(name string) (*models.User, error) {
 
 func Get(userId string) (*models.User, error) {
 	tx := global.DB("")
-	return user.Get(tx, userId)
+	model := &models.User{}
+	q := tx.Where("id = ?", userId).First(model)
+	if q.Error != nil {
+		if errors.Is(q.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, q.Error
+	}
+
+	return model, nil
+}
+
+func List(page, pageSize int) ([]*models.User, int64, error) {
+	db := global.DB("")
+	var items []*models.User
+	var total int64
+	err := db.Scopes(models.Paginate(&models.PageParams{
+		Page:     page,
+		PageSize: pageSize,
+	})).Find(&items).Count(&total).Error
+
+	return items, total, err
 }

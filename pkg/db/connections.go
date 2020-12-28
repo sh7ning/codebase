@@ -4,8 +4,8 @@ import (
 	"codebase/pkg/log"
 	"fmt"
 
-	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type Configs map[string]*Config
