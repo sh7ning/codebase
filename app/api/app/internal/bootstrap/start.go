@@ -8,7 +8,7 @@ import (
 	"codebase/pkg/redis"
 )
 
-func Start() error {
+func Start(errs chan error) error {
 	loadResource()
 
 	//业务代码开始

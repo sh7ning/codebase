@@ -58,8 +58,8 @@ func New(cfg ConfigInterface, cfgFile string, flagSet *pflag.FlagSet) (*App, err
 	}, nil
 }
 
-func (a *App) RunWith(boot func() error) error {
-	if err := boot(); err != nil {
+func (a *App) RunWith(boot func(chan error) error) error {
+	if err := boot(a.errs); err != nil {
 		return err
 	}
 
