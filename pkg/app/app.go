@@ -63,6 +63,10 @@ func (a *App) RunWith(boot func() error) error {
 		return err
 	}
 
+	return a.wait()
+}
+
+func (a *App) wait() error {
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// Wait for interrupt signal to gracefully shutdown the server
 	quit := make(chan os.Signal)
