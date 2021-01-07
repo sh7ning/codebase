@@ -2,6 +2,12 @@ package cmd
 
 import (
 	"codebase/app/api/app/internal/bootstrap"
+	"codebase/app/api/app/internal/cfg"
+	"codebase/pkg/app"
+	"codebase/pkg/defers"
+	"log"
+
+	"go.uber.org/zap"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +23,17 @@ func NewStartCommand() *cobra.Command {
 				panic(err)
 			}
 
-			bootstrap.Start(cfgFile, cmd.Flags())
+			defer defers.Run()
+
+			//初始化全局变量，资源等
+			application, err := app.New(cfg.Config, cfgFile, cmd.Flags())
+			if err != nil {
+				panic(err)
+			}
+
+			if err = application.RunWith(bootstrap.Start); err != nil {
+				log.Panic("application run error", zap.Error(err))
+			}
 		},
 	}
 	cmd.Flags().StringP("config", "c", "config.yaml", "app config file")

@@ -8,7 +8,7 @@ import (
 )
 
 func Routes(engine *gin.Engine) {
-	engine.GET("/index", home.Home())
+	engine.GET("/", home.Home())
 
 	apiRoutes := engine.Group("/v1")
 	{

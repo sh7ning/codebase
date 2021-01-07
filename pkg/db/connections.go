@@ -15,6 +15,16 @@ type Connections struct {
 	collections map[string]*gorm.DB
 }
 
+var dbs *Connections
+
+func Init(debug bool, configs Configs) {
+	dbs = New(debug, configs)
+}
+
+func Conn(conn string) *gorm.DB {
+	return dbs.Get(conn)
+}
+
 func New(debug bool, configs Configs) *Connections {
 	collections := make(map[string]*gorm.DB)
 	for name, config := range configs {

@@ -1,7 +1,7 @@
 package cfg
 
 import (
-	"codebase/pkg/config"
+	"codebase/pkg/app"
 	"codebase/pkg/db"
 	"codebase/pkg/dingtalk"
 	"codebase/pkg/redis"
@@ -11,7 +11,7 @@ import (
 var Config = &appConf{}
 
 type appConf struct {
-	config.AppConfig `mapstructure:",squash"`
+	app.Config `mapstructure:",squash"`
 
 	HttpServer *HttpServerConfig `mapstructure:"http_server" validate:"required"`
 

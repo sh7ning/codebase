@@ -15,6 +15,16 @@ type Connections struct {
 	collections map[string]*redis.Client
 }
 
+var connections *Connections
+
+func Init(configs Configs) {
+	connections = New(configs)
+}
+
+func Conn(conn string) *redis.Client {
+	return connections.Get(conn)
+}
+
 func New(configs Configs) *Connections {
 	collections := make(map[string]*redis.Client)
 	for conn, config := range configs {

@@ -7,6 +7,16 @@ type Robots struct {
 	collections map[string]*Robot
 }
 
+var collections *Robots
+
+func Init(configs Configs) {
+	collections = New(configs)
+}
+
+func Get(conn string) *Robot {
+	return collections.Get(conn)
+}
+
 func New(configs Configs) *Robots {
 	collections := make(map[string]*Robot)
 
