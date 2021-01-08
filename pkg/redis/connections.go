@@ -17,20 +17,21 @@ type Connections struct {
 
 var connections *Connections
 
-func Init(configs Configs) {
-	connections = New(configs)
+func Init(configs Configs) (err error) {
+	connections, err = New(configs)
+	return
 }
 
 func Conn(conn string) *redis.Client {
 	return connections.Get(conn)
 }
 
-func New(configs Configs) *Connections {
+func New(configs Configs) (*Connections, error) {
 	collections := make(map[string]*redis.Client)
 	for conn, config := range configs {
 		redisPool, err := NewRedis(config)
 		if err != nil {
-			log.Panic(fmt.Sprintf("newRedis redis, conn: %s, error: %s", conn, err.Error()), zap.Error(err))
+			return nil, fmt.Errorf("NewRedis error, conn: %s, error: %s", conn, err.Error())
 		}
 
 		collections[conn] = redisPool
@@ -39,7 +40,7 @@ func New(configs Configs) *Connections {
 	return &Connections{
 		configs:     configs,
 		collections: collections,
-	}
+	}, nil
 }
 
 func (c *Connections) Get(conn string) *redis.Client {

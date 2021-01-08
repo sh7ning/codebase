@@ -6,10 +6,15 @@ import (
 	"codebase/pkg/db"
 	"codebase/pkg/dingtalk"
 	"codebase/pkg/redis"
+	"log"
+
+	"go.uber.org/zap"
 )
 
 func Start(errs chan error) error {
-	loadResource()
+	if err := loadResource(); err != nil {
+		log.Panic(err.Error(), zap.Error(err))
+	}
 
 	//业务代码开始
 	web.New()
@@ -17,8 +22,14 @@ func Start(errs chan error) error {
 	return nil
 }
 
-func loadResource() {
-	db.Init(cfg.Config.AppDebug, cfg.Config.DB)
-	redis.Init(cfg.Config.Redis)
+func loadResource() error {
+	if err := db.Init(cfg.Config.AppDebug, cfg.Config.DB); err != nil {
+		return err
+	}
+	if err := redis.Init(cfg.Config.Redis); err != nil {
+		return err
+	}
 	dingtalk.Init(cfg.Config.DingTalk)
+
+	return nil
 }
