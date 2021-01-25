@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"codebase/app/api/app/internal/bootstrap"
-	"codebase/app/api/app/internal/cfg"
+	"codebase/app/api/internal/bootstrap"
+	"codebase/app/api/internal/cfg"
 	"codebase/pkg/app"
 	"codebase/pkg/defers"
 	"log"

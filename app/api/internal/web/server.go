@@ -1,8 +1,8 @@
 package web
 
 import (
-	"codebase/app/api/app/internal/cfg"
-	"codebase/app/api/app/internal/web/routes"
+	"codebase/app/api/internal/cfg"
+	"codebase/app/api/internal/web/routes"
 	"codebase/pkg/defers"
 	"codebase/pkg/log"
 	"codebase/pkg/web"

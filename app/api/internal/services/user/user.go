@@ -1,7 +1,7 @@
 package user
 
 import (
-	"codebase/app/api/app/internal/models"
+	"codebase/app/api/internal/models"
 	"codebase/pkg/db"
 	"codebase/pkg/log"
 	"errors"

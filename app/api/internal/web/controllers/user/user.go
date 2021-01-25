@@ -1,9 +1,9 @@
 package user
 
 import (
-	"codebase/app/api/app/internal/models"
-	"codebase/app/api/app/internal/services/user"
-	"codebase/app/api/app/internal/web/controllers/user/params"
+	"codebase/app/api/internal/models"
+	"codebase/app/api/internal/services/user"
+	"codebase/app/api/internal/web/controllers/user/params"
 	"codebase/pkg/helper"
 	"codebase/pkg/log"
 	"codebase/pkg/web/response"

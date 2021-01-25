@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	"codebase/app/api/app/internal/cfg"
-	"codebase/app/api/app/internal/web"
+	"codebase/app/api/internal/cfg"
+	"codebase/app/api/internal/web"
 	"codebase/pkg/db"
 	"codebase/pkg/dingtalk"
 	"codebase/pkg/redis"

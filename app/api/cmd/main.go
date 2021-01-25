@@ -1,7 +1,7 @@
 package main
 
 import (
-	"codebase/app/api/app/internal/cmd"
+	"codebase/app/api/internal/cmd"
 )
 
 func main() {

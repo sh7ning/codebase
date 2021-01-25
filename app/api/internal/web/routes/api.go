@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"codebase/app/api/app/internal/web/controllers/home"
-	"codebase/app/api/app/internal/web/controllers/user"
+	"codebase/app/api/internal/web/controllers/home"
+	"codebase/app/api/internal/web/controllers/user"
 
 	"github.com/gin-gonic/gin"
 )
