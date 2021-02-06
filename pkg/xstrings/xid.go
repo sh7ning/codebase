@@ -1,4 +1,4 @@
-package uniqid
+package xstring
 
 import "github.com/rs/xid"
 
