@@ -8,6 +8,8 @@ require (
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/go-redis/redis v6.15.7+incompatible
+	github.com/json-iterator/go v1.1.7
+	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
@@ -17,6 +19,7 @@ require (
 	github.com/spf13/viper v1.6.2
 	github.com/subosito/gotenv v1.2.0
 	go.uber.org/zap v1.13.0
+	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/gorm v1.20.9

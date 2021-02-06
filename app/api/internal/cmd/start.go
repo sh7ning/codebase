@@ -5,11 +5,10 @@ import (
 	"codebase/app/api/internal/cfg"
 	"codebase/pkg/app"
 	"codebase/pkg/defers"
-	"log"
-
-	"go.uber.org/zap"
+	"codebase/pkg/log"
 
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 func NewStartCommand() *cobra.Command {

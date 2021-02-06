@@ -19,15 +19,15 @@ func (l *logger) LogMode(level gl.LogLevel) gl.Interface {
 }
 
 func (l *logger) Info(_ context.Context, s string, args ...interface{}) {
-	log.Info(fmt.Sprintf(s, args))
+	log.Info(fmt.Sprintf(s, args...))
 }
 
 func (l *logger) Warn(_ context.Context, s string, args ...interface{}) {
-	log.Warn(fmt.Sprintf(s, args))
+	log.Warn(fmt.Sprintf(s, args...))
 }
 
 func (l *logger) Error(_ context.Context, s string, args ...interface{}) {
-	log.Error(fmt.Sprintf(s, args))
+	log.Error(fmt.Sprintf(s, args...))
 }
 
 func (l *logger) Trace(_ context.Context, begin time.Time, fc func() (string, int64), err error) {
