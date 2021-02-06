@@ -45,11 +45,16 @@ func SetLogger(log *zap.Logger) error {
 	return nil
 }
 
-func New(loggerConfig *LoggerConfig) {
-	if logger != nil {
-		return
-	}
+func init() {
+	New(&LoggerConfig{
+		Development: true,
+		AppName:     "app",
+		LogFile:     "",
+		Notify:      nil,
+	})
+}
 
+func New(loggerConfig *LoggerConfig) {
 	var config Config
 
 	if loggerConfig.Development {
