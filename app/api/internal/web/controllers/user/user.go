@@ -4,8 +4,8 @@ import (
 	"codebase/app/api/internal/models"
 	"codebase/app/api/internal/services/user"
 	"codebase/app/api/internal/web/controllers/user/params"
-	"codebase/pkg/helper"
 	"codebase/pkg/log"
+	"codebase/pkg/utils"
 	"codebase/pkg/web/response"
 
 	"github.com/gin-gonic/gin"
@@ -45,7 +45,7 @@ func List(c *gin.Context) {
 
 	data, total, err := user.List(form.Page, form.PageSize)
 	if err != nil {
-		log.Error("获取用户列表失败, request: "+helper.ToJsonString(form), zap.Error(err))
+		log.Error("获取用户列表失败, request: "+utils.ToJsonString(form), zap.Error(err))
 		response.ErrorJson(c, response.CodeSystemError, err.Error())
 		return
 	}

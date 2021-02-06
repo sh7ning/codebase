@@ -1,4 +1,4 @@
-package helper
+package utils
 
 import "codebase/pkg/json"
 

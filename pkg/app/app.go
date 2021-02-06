@@ -2,8 +2,8 @@ package app
 
 import (
 	"codebase/pkg/config"
-	"codebase/pkg/helper"
 	"codebase/pkg/log"
+	"codebase/pkg/utils"
 	"os"
 	"os/signal"
 	"syscall"
@@ -52,7 +52,7 @@ func New(cfg ConfigInterface, cfgFile string, flagSet *pflag.FlagSet) (*App, err
 	})
 
 	log.Info("using cfg file: " + c.ConfigFileUsed())
-	log.Debug("cfg data", zap.String("config_data", helper.ToJsonString(cfg)))
+	log.Debug("cfg data", zap.String("config_data", utils.ToJsonString(cfg)))
 	return &App{
 		errs: make(chan error, 10),
 	}, nil

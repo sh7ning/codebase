@@ -8,7 +8,7 @@ package log
 
 import (
 	"codebase/pkg/defers"
-	"codebase/pkg/helper"
+	"codebase/pkg/utils"
 	"errors"
 	"fmt"
 	"io"
@@ -80,7 +80,7 @@ func New(loggerConfig *LoggerConfig) {
 					if len(stack) > 2048 {
 						entry.Stack = string(stack[:2048])
 					}
-					if err := loggerConfig.Notify.SendTextMessage(helper.ToJsonString(entry), nil, false); err != nil {
+					if err := loggerConfig.Notify.SendTextMessage(utils.ToJsonString(entry), nil, false); err != nil {
 						fmt.Println("钉钉发送消息失败:" + err.Error())
 					}
 				}()
