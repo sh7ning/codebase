@@ -2,10 +2,10 @@ package dingtalk
 
 import (
 	"bytes"
+	"codebase/pkg/json"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"

@@ -1,6 +1,6 @@
 package helper
 
-import "encoding/json"
+import "codebase/pkg/json"
 
 // ToJsonString converts any value to JSON string.
 func ToJsonString(v interface{}) string {
