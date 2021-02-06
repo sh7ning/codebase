@@ -1,12 +1,9 @@
 package response
 
 import (
-	"codebase/pkg/log"
 	"net/http"
-	"net/http/httputil"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 type Response struct {
@@ -21,15 +18,6 @@ func SuccessJSON(c *gin.Context, data interface{}) {
 		Data: data,
 		Msg:  "",
 	})
-}
-
-func LogError(c *gin.Context, error interface{}) {
-	request, _ := httputil.DumpRequest(c.Request, false)
-	log.Error(
-		"[Recovery] panic recovered",
-		zap.Any("error", error),
-		zap.String("request", string(request)),
-	)
 }
 
 func ErrorJson(c *gin.Context, code int, msg string) {
