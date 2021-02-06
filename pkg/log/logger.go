@@ -71,7 +71,7 @@ func New(loggerConfig *LoggerConfig) {
 				go func() {
 					defer func() {
 						if r := recover(); r != nil {
-							fmt.Println("logger recovery, 钉钉发送消息失败")
+							fmt.Println("logger recovery, SendTextMessage error: " + fmt.Sprintf("%+v", r))
 						}
 					}()
 
