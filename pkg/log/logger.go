@@ -1,9 +1,3 @@
-//package log
-//see: https://github.com/uber-go/zap
-//demo:
-//	_ = log.New(false)
-//	defer log.Sync()
-//	log.Info("this is a test message")
 package log
 
 import (
