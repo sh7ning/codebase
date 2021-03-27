@@ -14,6 +14,12 @@ func Go(fn func()) {
 	Try(fn, nil)
 }
 
+func GoE(fn func(), ech chan error) {
+	Try(fn, func(err error) {
+		ech <- err
+	})
+}
+
 // Delay goroutine
 func Delay(delay time.Duration, fn func()) {
 	Try(func() {
