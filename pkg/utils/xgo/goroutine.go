@@ -10,8 +10,8 @@ import (
 )
 
 // Go goroutine
-func Go(fn func()) (ec chan error) {
-	return Try(fn, nil)
+func Go(fn func()) {
+	Try(fn, nil)
 }
 
 // Delay goroutine
@@ -22,29 +22,27 @@ func Delay(delay time.Duration, fn func()) {
 	}, nil)
 }
 
-func Try(fn func(), cleaner func()) (ec chan error) {
-	ec = make(chan error, 1)
+func Try(fn func(), cleaner func(error)) {
 	go func() {
 		defer func() {
-			defer close(ec)
-			if err := recover(); err != nil {
+			var err error
+			if r := recover(); r != nil {
 				_, file, line, _ := runtime.Caller(2)
-				log.Error("recover", zap.Any("err", err), zap.String("line", fmt.Sprintf("%s:%d", file, line)))
-				if e, ok := err.(error); ok {
-					ec <- e
+				log.Error("recover", zap.Any("err", r), zap.String("line", fmt.Sprintf("%s:%d", file, line)))
+				if e, ok := r.(error); ok {
+					err = e
 				} else {
-					ec <- fmt.Errorf("%+v", err)
+					err = fmt.Errorf("%+v", r)
 				}
-
-				if cleaner != nil {
-					defer func() {
-						if err := recover(); err != nil {
-							_, file, line, _ := runtime.Caller(2)
-							log.Error("recover cleaner", zap.Any("err", err), zap.String("line", fmt.Sprintf("%s:%d", file, line)))
-						}
-					}()
-					cleaner()
-				}
+			}
+			if cleaner != nil {
+				defer func() {
+					if r := recover(); r != nil {
+						_, file, line, _ := runtime.Caller(2)
+						log.Error("recover cleaner", zap.Any("err", r), zap.String("line", fmt.Sprintf("%s:%d", file, line)))
+					}
+				}()
+				cleaner(err)
 			}
 		}()
 		fn()
