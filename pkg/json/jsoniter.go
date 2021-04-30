@@ -9,6 +9,14 @@ package json
 import jsoniter "github.com/json-iterator/go"
 
 var (
+	// var json = jsoniter.Config{
+	// 	EscapeHTML:             true,
+	// 	SortMapKeys:            true,
+	// 	ValidateJsonRawMessage: true,
+
+	// 	UseNumber:     true,
+	// 	CaseSensitive: true,
+	// }.Froze()
 	json = jsoniter.ConfigCompatibleWithStandardLibrary
 	// Marshal is exported by gin/json package.
 	Marshal = json.Marshal
